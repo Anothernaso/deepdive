@@ -1,0 +1,12 @@
+[package]
+name = "deepdive-bin"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+bevy = { workspace = true, no-default-features = true, features = ["2d"] }
+bevy_seedling = { workspace = true }
+avian2d = { workspace = true }
+
+deepdive-state = { workspace = true }
+deepdive-physics = { workspace = true }
