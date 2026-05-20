@@ -14,18 +14,14 @@
 # Project Deep Dive. If not, see <https://www.gnu.org/licenses/>.
 #
 
-[package]
-name = "deepdive-logic"
-version.workspace = true
-edition.workspace = true
+root = true
 
-authors.workspace = true
-license.workspace = true
-repository.workspace = true
-homepage.workspace = true
+[*]
+end_of_line = lf
+charset = utf-8
 
-[dependencies]
-bevy = { workspace = true, no-default-features = true, features = ["2d_api"] }
+indent_style = space
+indent_size = 4
 
-deepdive-state = { workspace = true }
-deepdive-physics = { workspace = true }
+trim_trailing_whitespace = true
+insert_final_newline = true
