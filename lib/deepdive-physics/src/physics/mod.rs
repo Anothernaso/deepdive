@@ -16,12 +16,12 @@
 
 use bevy::prelude::*;
 
-use crate::{body::{Body, DefaultBody, Buoyancy}, water_setup::WaterSetup};
+use crate::{body::{Body, DefaultBody, Buoyant}, water_setup::WaterSetup};
 
 use deepdive_state::IsPaused;
 
 pub fn process_physics(
-    mut buoyant: Query<(&mut Transform, &Body), (With<DefaultBody>, With<Buoyancy>)>,
+    mut buoyant: Query<(&mut Transform, &Body), (With<DefaultBody>, With<Buoyant>)>,
     water_setup: Res<WaterSetup>,
     is_paused: Res<State<IsPaused>>,
     time: Res<Time>

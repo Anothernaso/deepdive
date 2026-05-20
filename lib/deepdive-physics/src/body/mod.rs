@@ -58,11 +58,11 @@ impl Default for Body {
     }
 }
 
-#[derive(Component, Reflect)]
+#[derive(Default, Component, Reflect)]
 #[require(Body)]
 #[reflect(Component)]
 pub struct DefaultBody;
 
-#[derive(Component, Reflect)]
+#[derive(Default, Component, Reflect)]
 #[reflect(Component)]
-pub struct Buoyancy;
+pub struct Buoyant;

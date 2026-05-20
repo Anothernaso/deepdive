@@ -19,7 +19,7 @@ mod body;
 mod physics;
 
 pub use water_setup::WaterSetup;
-pub use body::{Body, DefaultBody, Buoyancy};
+pub use body::{Body, DefaultBody, Buoyant};
 
 use bevy::prelude::*;
 
@@ -43,7 +43,7 @@ impl Plugin for DeepDivePhysicsPlugin {
 
         app.register_type::<Body>();
         app.register_type::<DefaultBody>();
-        app.register_type::<Buoyancy>();
+        app.register_type::<Buoyant>();
 
         app.insert_resource(self.water_setup.clone());
 

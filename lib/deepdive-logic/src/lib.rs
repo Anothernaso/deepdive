@@ -15,8 +15,10 @@
 //
 
 mod camera;
+mod human;
 
 pub use camera::MainCamera;
+pub use human::{Human, human};
 
 use bevy::prelude::*;
 
@@ -27,7 +29,12 @@ pub struct DeepDiveLogicPlugin;
 impl Plugin for DeepDiveLogicPlugin {
     fn build(&self, app: &mut App) {
         app.register_type::<MainCamera>();
+        app.register_type::<Human>();
 
-        app.add_systems(Startup, camera_setup);
+        app.add_systems(Startup, (camera_setup, setup));
     }
+}
+
+fn setup(mut commands: Commands) {
+    commands.spawn(human());
 }
