@@ -1,8 +1,5 @@
 use bevy::prelude::*;
 
-use bevy_seedling::prelude::*;
-use avian2d::prelude::*;
-
 use deepdive_state::DeepDiveStatePlugin;
 use deepdive_physics::DeepDivePhysicsPlugin;
 use deepdive_logic::DeepDiveLogicPlugin;
@@ -24,12 +21,6 @@ impl Plugin for DeepDiveMasterPlugin {
 fn main() {
     App::new()
         .add_plugins(
-            (
-                DefaultPlugins,
-                SeedlingPlugin::default(),
-                PhysicsPlugins::default(),
-                DeepDiveMasterPlugin,
-            )
-        )
-        .run();
+            DeepDiveMasterPlugin
+        ).run();
 }

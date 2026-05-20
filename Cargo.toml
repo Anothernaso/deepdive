@@ -9,8 +9,6 @@ members = [
 
 [workspace.dependencies]
 bevy = "0.18"
-bevy_seedling = "0.7"
-avian2d = "0.6"
 
 deepdive-state = { path = "lib/deepdive-state" }
 deepdive-physics = { path = "lib/deepdive-physics" }
