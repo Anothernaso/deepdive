@@ -37,6 +37,9 @@ impl Plugin for DeepDiveMasterPlugin {
 fn main() {
     App::new()
         .add_plugins(
-            DeepDiveMasterPlugin
+            (
+                DefaultPlugins,
+                DeepDiveMasterPlugin,
+            )
         ).run();
 }
