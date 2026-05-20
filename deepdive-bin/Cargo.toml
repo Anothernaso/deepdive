@@ -10,3 +10,4 @@ avian2d = { workspace = true }
 
 deepdive-state = { workspace = true }
 deepdive-physics = { workspace = true }
+deepdive-logic = { workspace = true }

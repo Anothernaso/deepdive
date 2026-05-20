@@ -1,11 +1,17 @@
 [workspace]
 resolver = "3"
-members = ["deepdive-bin", "deepdive-state", "deepdive-physics"]
+members = [
+    "lib/deepdive-state",
+    "lib/deepdive-physics",
+    "lib/deepdive-logic",
+    "deepdive-bin",
+]
 
 [workspace.dependencies]
 bevy = "0.18"
 bevy_seedling = "0.7"
 avian2d = "0.6"
 
-deepdive-state = { path = "deepdive-state" }
-deepdive-physics = { path = "deepdive-physics" }
+deepdive-state = { path = "lib/deepdive-state" }
+deepdive-physics = { path = "lib/deepdive-physics" }
+deepdive-logic = { path = "lib/deepdive-logic" }
