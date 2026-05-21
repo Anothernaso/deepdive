@@ -1,5 +1,6 @@
 [unstable]
 codegen-backend = true
+build-std = ["std", "panic_abort"]
 
 [build]
 rustc-wrapper = "sccache"
@@ -10,9 +11,25 @@ codegen-backend = "cranelift"
 [profile.dev.package."*"]
 codegen-backend = "cranelift"
 
+[profile.release]
+codegen-units = 1
+opt-level = 3
+debug = "none"
+debug-assertions = false
+strip = "symbols"
+panic = "abort"
+lto = "fat"
+
+[profile.release.package."*"]
+codegen-units = 1
+opt-level = 3
+debug = "none"
+debug-assertions = false
+strip = "symbols"
+
 [target.x86_64-unknown-linux-gnu]
 linker = "clang"
 rustflags = [
     "-Zshare-generics=y",
-    "-C", "link-arg=-fuse-ld=mold"
+    "-C", "link-arg=-fuse-ld=mold",
 ]

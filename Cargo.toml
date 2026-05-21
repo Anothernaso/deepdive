@@ -33,9 +33,7 @@ repository = "https://github.com/Anothernaso/deepdive"
 homepage = "https://github.com/Anothernaso/deepdive"
 
 [workspace.dependencies]
-bevy = { version = "0.18", no-default-features = true, features = [
-    "dynamic_linking",
-] }
+bevy = { version = "0.18" }
 
 deepdive-state = { path = "lib/deepdive-state" }
 deepdive-physics = { path = "lib/deepdive-physics" }
