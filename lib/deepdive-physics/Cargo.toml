@@ -25,6 +25,6 @@ repository.workspace = true
 homepage.workspace = true
 
 [dependencies]
-bevy = { workspace = true, no-default-features = true, features = ["2d_api"] }
+bevy = { workspace = true, features = ["2d_api"] }
 
 deepdive-state = { workspace = true }
