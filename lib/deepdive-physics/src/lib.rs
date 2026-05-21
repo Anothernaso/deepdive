@@ -19,11 +19,11 @@ mod body;
 mod physics;
 
 pub use water_setup::WaterSetup;
-pub use body::{Body, DefaultBody, Buoyant};
+pub use body::{PhysicsBody, DefaultSimulatedBody, SubAquaticBody};
 
 use bevy::prelude::*;
 
-use physics::process_physics;
+use physics::simulate_physics;
 
 
 #[derive(Default)]
@@ -41,12 +41,12 @@ impl Plugin for DeepDivePhysicsPlugin {
     fn build(&self, app: &mut App) {
         app.register_type::<WaterSetup>();
 
-        app.register_type::<Body>();
-        app.register_type::<DefaultBody>();
-        app.register_type::<Buoyant>();
+        app.register_type::<PhysicsBody>();
+        app.register_type::<DefaultSimulatedBody>();
+        app.register_type::<SubAquaticBody>();
 
         app.insert_resource(self.water_setup.clone());
 
-        app.add_systems(FixedUpdate, process_physics);
+        app.add_systems(FixedUpdate, simulate_physics);
     }
 }

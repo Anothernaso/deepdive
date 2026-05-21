@@ -36,5 +36,8 @@ impl Plugin for DeepDiveLogicPlugin {
 }
 
 fn setup(mut commands: Commands) {
-    commands.spawn(human());
+    let size = Vec2::new(50., 180.);
+    let weight = 8000.;
+
+    commands.spawn((human(size.x * size.y, weight), Sprite::from_color(Color::WHITE, size)));
 }

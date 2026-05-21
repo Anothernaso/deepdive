@@ -16,12 +16,12 @@
 
 use bevy::prelude::*;
 
-use crate::{body::{Body, DefaultBody, Buoyant}, water_setup::WaterSetup};
+use crate::{body::{PhysicsBody, DefaultSimulatedBody, SubAquaticBody}, water_setup::WaterSetup};
 
 use deepdive_state::IsPaused;
 
-pub fn process_physics(
-    mut buoyant: Query<(&mut Transform, &Body), (With<DefaultBody>, With<Buoyant>)>,
+pub fn simulate_physics(
+    mut sub_aquatic: Query<(&mut Transform, &PhysicsBody), (With<DefaultSimulatedBody>, With<SubAquaticBody>)>,
     water_setup: Res<WaterSetup>,
     is_paused: Res<State<IsPaused>>,
     time: Res<Time>
@@ -30,11 +30,13 @@ pub fn process_physics(
         return;
     }
 
-    buoyant.par_iter_mut().for_each(
+    sub_aquatic.par_iter_mut().for_each(
         |(mut transform, body)| {
-            let density_ratio = body.get_density_kgpm2() / water_setup.density_kgpm2;
+            let density_ratio = body.get_density_dagpcm2() / water_setup.density_dagpcm2;
 
-            transform.translation.y += (density_ratio - 1.) * time.delta_secs();
+            let vel_delta = (density_ratio - 1.) * 100. * time.delta_secs();
+
+            transform.translation.y += vel_delta;
         }
     );
 }
