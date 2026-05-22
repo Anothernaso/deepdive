@@ -14,28 +14,12 @@
 // Project Deep Dive. If not, see <https://www.gnu.org/licenses/>.
 //
 
-mod camera;
-mod pawn;
+mod human;
 
-pub use camera::MainCamera;
-pub use pawn::{Human, Pawn, human};
+pub use human::{Human, human};
 
 use bevy::prelude::*;
 
-use camera::camera_setup;
-
-pub struct DeepDiveLogicPlugin;
-
-impl Plugin for DeepDiveLogicPlugin {
-    fn build(&self, app: &mut App) {
-        app.register_type::<MainCamera>();
-        app.register_type::<Pawn>();
-        app.register_type::<Human>();
-
-        app.add_systems(Startup, (camera_setup, setup));
-    }
-}
-
-fn setup(mut commands: Commands) {
-    commands.spawn(human());
-}
+#[derive(Default, Component, Reflect)]
+#[reflect(Component)]
+pub struct Pawn;
