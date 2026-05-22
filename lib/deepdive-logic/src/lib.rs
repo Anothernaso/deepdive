@@ -15,10 +15,12 @@
 //
 
 mod camera;
+mod controller;
 mod pawn;
 
 pub use camera::MainCamera;
-pub use pawn::{Human, Pawn, human};
+pub use controller::{Controller, PlayerController, player_controller};
+pub use pawn::{HumanPawn, Pawn, human};
 
 use bevy::prelude::*;
 
@@ -29,13 +31,19 @@ pub struct DeepDiveLogicPlugin;
 impl Plugin for DeepDiveLogicPlugin {
     fn build(&self, app: &mut App) {
         app.register_type::<MainCamera>();
+
+        app.register_type::<Controller>();
+        app.register_type::<PlayerController>();
+
         app.register_type::<Pawn>();
-        app.register_type::<Human>();
+        app.register_type::<HumanPawn>();
 
         app.add_systems(Startup, (camera_setup, setup));
     }
 }
 
 fn setup(mut commands: Commands) {
-    commands.spawn(human());
+    commands.spawn(human()).with_children(|p| {
+        p.spawn(player_controller(p.target_entity()));
+    });
 }

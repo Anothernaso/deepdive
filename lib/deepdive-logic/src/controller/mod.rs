@@ -14,12 +14,20 @@
 // Project Deep Dive. If not, see <https://www.gnu.org/licenses/>.
 //
 
-mod human;
+mod player;
 
-pub use human::{HumanPawn, human};
+pub use player::{PlayerController, player_controller};
 
 use bevy::prelude::*;
 
-#[derive(Default, Component, Reflect)]
+#[derive(Component, Reflect)]
 #[reflect(Component)]
-pub struct Pawn;
+pub struct Controller {
+    pub pawn: Entity,
+}
+
+impl Controller {
+    pub fn new(pawn: Entity) -> Self {
+        Self { pawn }
+    }
+}

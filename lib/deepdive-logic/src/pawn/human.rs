@@ -16,20 +16,20 @@
 
 use bevy::prelude::*;
 
-use crate::pawn::Pawn;
+use super::Pawn;
 use deepdive_physics::{DefaultSimulatedBody, PhysicsBody, SubAquaticBody};
 
-#[derive(Default, Component, Reflect)]
+#[derive(Component, Reflect)]
 #[require(Pawn, SubAquaticBody, DefaultSimulatedBody)]
 #[reflect(Component)]
-pub struct Human;
+pub struct HumanPawn;
 
 pub fn human() -> impl Bundle {
     let size = Vec2::new(50., 180.);
     let weight = 8000.;
 
     (
-        Human,
+        HumanPawn,
         PhysicsBody::new(size.x * size.y, weight),
         Sprite::from_color(Color::WHITE, size),
     )
