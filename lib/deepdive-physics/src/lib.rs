@@ -14,17 +14,19 @@
 // Project Deep Dive. If not, see <https://www.gnu.org/licenses/>.
 //
 
-mod water_setup;
 mod body;
+mod message;
 mod physics;
+mod water_setup;
 
+pub use body::{DefaultSimulatedBody, PhysicsBody, SubAquaticBody};
+pub use message::BodyUpdate;
 pub use water_setup::WaterSetup;
-pub use body::{PhysicsBody, DefaultSimulatedBody, SubAquaticBody};
 
 use bevy::prelude::*;
 
-use physics::simulate_physics;
-
+use message::body_update;
+use physics::simulate_buoyancy;
 
 #[derive(Default)]
 pub struct DeepDivePhysicsPlugin {
@@ -41,12 +43,16 @@ impl Plugin for DeepDivePhysicsPlugin {
     fn build(&self, app: &mut App) {
         app.register_type::<WaterSetup>();
 
+        app.register_type::<BodyUpdate>();
+
         app.register_type::<PhysicsBody>();
         app.register_type::<DefaultSimulatedBody>();
         app.register_type::<SubAquaticBody>();
 
         app.insert_resource(self.water_setup.clone());
 
-        app.add_systems(FixedUpdate, simulate_physics);
+        app.add_message::<BodyUpdate>();
+
+        app.add_systems(FixedUpdate, (simulate_buoyancy, body_update));
     }
 }

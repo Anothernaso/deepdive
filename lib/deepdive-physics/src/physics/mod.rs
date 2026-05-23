@@ -14,29 +14,52 @@
 // Project Deep Dive. If not, see <https://www.gnu.org/licenses/>.
 //
 
+use std::sync::{Arc, RwLock};
+
 use bevy::prelude::*;
 
-use crate::{body::{PhysicsBody, DefaultSimulatedBody, SubAquaticBody}, water_setup::WaterSetup};
+use super::{
+    body::{DefaultSimulatedBody, PhysicsBody, SubAquaticBody},
+    message::BodyUpdate,
+    water_setup::WaterSetup,
+};
 
 use deepdive_state::IsPaused;
 
-pub fn simulate_physics(
-    mut sub_aquatic: Query<(&mut Transform, &PhysicsBody), (With<DefaultSimulatedBody>, With<SubAquaticBody>)>,
+pub fn simulate_buoyancy(
+    mut sub_aquatic: Query<
+        (Entity, &PhysicsBody),
+        (With<DefaultSimulatedBody>, With<SubAquaticBody>),
+    >,
     water_setup: Res<WaterSetup>,
+    mut writer: MessageWriter<BodyUpdate>,
     is_paused: Res<State<IsPaused>>,
-    time: Res<Time>
+    time: Res<Time>,
 ) {
     if *is_paused.get() != IsPaused::Running {
         return;
     }
 
-    sub_aquatic.par_iter_mut().for_each(
-        |(mut transform, body)| {
-            let density_ratio = body.get_density_dagpcm2() / water_setup.density_dagpcm2;
+    let messages = Arc::new(RwLock::new(Vec::<BodyUpdate>::new()));
 
-            let vel_delta = (density_ratio - 1.) * 100. * time.delta_secs();
+    sub_aquatic.par_iter_mut().for_each(|(entity, body)| {
+        let density_ratio = body.get_density_dagpcm2() / water_setup.density_dagpcm2;
+        let vel_delta = (density_ratio - 1.) * 100. * time.delta_secs();
 
-            transform.translation.y += vel_delta;
-        }
-    );
+        let Ok(mut messages) = messages.write() else {
+            return;
+        };
+
+        messages.push(BodyUpdate::new(entity, Vec2::new(0., vel_delta)));
+    });
+
+    let Ok(lock) = Arc::try_unwrap(messages) else {
+        return;
+    };
+
+    let Ok(inner) = lock.into_inner() else {
+        return;
+    };
+
+    writer.write_batch(inner);
 }
