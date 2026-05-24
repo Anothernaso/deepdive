@@ -17,23 +17,23 @@
 use bevy::prelude::*;
 
 /// Unit: Centimeters
-#[derive(Default, Component, Reflect)]
+#[derive(Debug, Default, Component, Reflect)]
 #[reflect(Component)]
 pub struct Size(pub Vec2);
 
 /// Unit: Decagrams
-#[derive(Default, Component, Reflect)]
+#[derive(Debug, Default, Component, Reflect)]
 #[reflect(Component)]
 pub struct Mass(pub f32);
 
 /// Unit: Square centimeters
-#[derive(Default, Component, Reflect)]
+#[derive(Debug, Default, Component, Reflect)]
 #[require(Size)]
 #[reflect(Component)]
 pub struct Area(pub f32);
 
 /// Unit: Decagrams per square centimeter
-#[derive(Default, Component, Reflect)]
+#[derive(Debug, Default, Component, Reflect)]
 #[require(Area, Mass)]
 #[reflect(Component)]
 pub struct Density(pub f32);

@@ -22,7 +22,7 @@ use bevy::prelude::*;
 
 use deepdive_state::InGameOnly;
 
-#[derive(Default, Component, Reflect)]
+#[derive(Debug, Default, Component, Reflect)]
 #[require(InGameOnly)]
 #[reflect(Component)]
 pub struct Pawn;

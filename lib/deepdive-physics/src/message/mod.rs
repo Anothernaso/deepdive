@@ -4,7 +4,7 @@ use bevy::prelude::*;
 
 use super::body::PhysicsBody;
 
-#[derive(Message, Reflect)]
+#[derive(Debug, Message, Reflect)]
 pub struct BodyUpdate {
     body: Entity,
     delta: Vec2,
@@ -28,6 +28,7 @@ pub fn body_update(
         };
 
         let Ok(mut body) = bodies.get_mut(message.body) else {
+            warn!(msg=?message, "Message was sent with an invalid body entity");
             return;
         };
 

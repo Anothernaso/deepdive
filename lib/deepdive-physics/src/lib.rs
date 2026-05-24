@@ -18,12 +18,12 @@ mod body;
 mod message;
 mod misc;
 mod physics;
-mod water_setup;
+mod setup;
 
 pub use body::{PhysicsBody, SubAquaticBody};
 pub use message::BodyUpdate;
 pub use misc::{Area, Density, Mass, Size};
-pub use water_setup::WaterSetup;
+pub use setup::{PhysicsSetup, WaterSetup};
 
 use bevy::prelude::*;
 
@@ -35,17 +35,22 @@ use deepdive_state::IsPaused;
 
 #[derive(Default)]
 pub struct DeepDivePhysicsPlugin {
+    physics_setup: PhysicsSetup,
     water_setup: WaterSetup,
 }
 
 impl DeepDivePhysicsPlugin {
-    pub fn new(water_setup: WaterSetup) -> Self {
-        Self { water_setup }
+    pub fn new(physics_setup: PhysicsSetup, water_setup: WaterSetup) -> Self {
+        Self {
+            physics_setup,
+            water_setup,
+        }
     }
 }
 
 impl Plugin for DeepDivePhysicsPlugin {
     fn build(&self, app: &mut App) {
+        app.register_type::<PhysicsSetup>();
         app.register_type::<WaterSetup>();
 
         app.register_type::<BodyUpdate>();
@@ -58,6 +63,7 @@ impl Plugin for DeepDivePhysicsPlugin {
         app.register_type::<Area>();
         app.register_type::<Density>();
 
+        app.insert_resource(self.physics_setup.clone());
         app.insert_resource(self.water_setup.clone());
 
         app.add_message::<BodyUpdate>();

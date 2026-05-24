@@ -16,22 +16,30 @@
 
 use bevy::prelude::*;
 
-use super::Pawn;
-use deepdive_physics::{Mass, Size, SubAquaticBody};
+#[derive(Debug, Clone, Resource, Reflect)]
+#[reflect(Resource)]
+pub struct WaterSetup {
+    /// Unit: Centimeters
+    pub surface_height: f32,
 
-const SIZE: Vec2 = Vec2::new(50., 180.);
-const MASS: f32 = 8000.;
+    /// Unit: Decagrams per square centimeter
+    pub density: f32,
+}
 
-#[derive(Debug, Component, Reflect)]
-#[require(Pawn, SubAquaticBody)]
-#[reflect(Component)]
-pub struct HumanPawn;
+impl WaterSetup {
+    pub fn new(surface_height: f32, density: f32) -> Self {
+        Self {
+            surface_height,
+            density,
+        }
+    }
+}
 
-pub fn human() -> impl Bundle {
-    (
-        HumanPawn,
-        Size(SIZE),
-        Mass(MASS),
-        Sprite::from_color(Color::WHITE, SIZE),
-    )
+impl Default for WaterSetup {
+    fn default() -> Self {
+        Self {
+            surface_height: 0.,
+            density: 1.,
+        }
+    }
 }

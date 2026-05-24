@@ -22,7 +22,7 @@ use bevy::prelude::*;
 
 use deepdive_state::InGameOnly;
 
-#[derive(Component, Reflect)]
+#[derive(Debug, Component, Reflect)]
 #[require(InGameOnly)]
 #[reflect(Component)]
 pub struct Controller {

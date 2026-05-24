@@ -18,12 +18,12 @@ use bevy::prelude::*;
 
 use super::misc::{Area, Density, Mass, Size};
 
-#[derive(Default, Component, Reflect)]
+#[derive(Debug, Default, Component, Reflect)]
 #[require(Transform, Size, Mass, Area, Density)]
 #[reflect(Component)]
 pub struct PhysicsBody;
 
-#[derive(Default, Component, Reflect)]
+#[derive(Debug, Default, Component, Reflect)]
 #[require(PhysicsBody)]
 #[reflect(Component)]
 pub struct SubAquaticBody;

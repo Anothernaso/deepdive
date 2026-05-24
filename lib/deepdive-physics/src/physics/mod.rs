@@ -16,7 +16,7 @@
 
 use bevy::prelude::*;
 
-use super::{body::SubAquaticBody, message::BodyUpdate, misc::Density, water_setup::WaterSetup};
+use super::{body::SubAquaticBody, message::BodyUpdate, misc::Density, setup::WaterSetup};
 
 use deepdive_state::IsPaused;
 
@@ -34,7 +34,7 @@ pub fn simulate_buoyancy(
     let mut messages = Vec::<BodyUpdate>::new();
 
     sub_aquatic.iter().for_each(|(entity, density)| {
-        let density_ratio = density.0 / water_setup.density_dagpcm2;
+        let density_ratio = density.0 / water_setup.density;
         let vel_delta = (density_ratio - 1.) * 100. * time.delta_secs();
 
         messages.push(BodyUpdate::new(entity, Vec2::new(0., vel_delta)));

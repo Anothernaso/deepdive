@@ -23,7 +23,7 @@ use deepdive_state::IsPaused;
 
 const SPEED: f32 = 3.3;
 
-#[derive(Component, Reflect)]
+#[derive(Debug, Component, Reflect)]
 #[reflect(Component)]
 pub struct PlayerController;
 
@@ -64,6 +64,7 @@ pub fn update_player(
 
     players.iter().for_each(|controller| {
         let Ok(pawn) = pawns.get(controller.pawn) else {
+            warn!(ctrl=?controller, "Invalid parent pawn of controller");
             return;
         };
 

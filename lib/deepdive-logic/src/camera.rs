@@ -16,7 +16,7 @@
 
 use bevy::prelude::*;
 
-#[derive(Component, Reflect)]
+#[derive(Debug, Component, Reflect)]
 #[require(Camera2d)]
 #[reflect(Component)]
 pub struct MainCamera;
