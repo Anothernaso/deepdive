@@ -14,8 +14,25 @@
 // Project Deep Dive. If not, see <https://www.gnu.org/licenses/>.
 //
 
-mod buoyancy;
-mod gravity;
+use bevy::prelude::*;
 
-pub use buoyancy::apply_buoyancy;
-pub use gravity::apply_gravity;
+use crate::{body::PhysicsBody, message::BodyUpdate, setup::PhysicsSetup};
+
+pub fn apply_gravity(
+    query: Query<Entity, With<PhysicsBody>>,
+    gravity: Res<PhysicsSetup>,
+    mut writer: MessageWriter<BodyUpdate>,
+    time: Res<Time>,
+) {
+    let mut messages = Vec::<BodyUpdate>::new();
+
+    query.iter().for_each(|entity| {
+        let vel_delta = -(gravity.gravity_scale * 100. * time.delta_secs());
+
+        let message = BodyUpdate::new(entity, Vec2::new(0., vel_delta));
+
+        messages.push(message);
+    });
+
+    writer.write_batch(messages);
+}

@@ -19,7 +19,7 @@ use bevy::prelude::*;
 #[derive(Debug, Clone, Resource, Reflect)]
 #[reflect(Resource)]
 pub struct PhysicsSetup {
-    gravity_scale: f32,
+    pub gravity_scale: f32,
 }
 
 impl PhysicsSetup {
@@ -30,8 +30,6 @@ impl PhysicsSetup {
 
 impl Default for PhysicsSetup {
     fn default() -> Self {
-        Self {
-            gravity_scale: 9.81,
-        }
+        Self { gravity_scale: 1. }
     }
 }
