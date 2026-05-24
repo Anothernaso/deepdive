@@ -20,7 +20,10 @@ pub use player::{PlayerController, player_controller, update_player};
 
 use bevy::prelude::*;
 
+use deepdive_state::InGameOnly;
+
 #[derive(Component, Reflect)]
+#[require(InGameOnly)]
 #[reflect(Component)]
 pub struct Controller {
     pub pawn: Entity,

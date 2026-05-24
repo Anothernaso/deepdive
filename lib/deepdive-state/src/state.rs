@@ -30,3 +30,8 @@ pub enum IsPaused {
     Running,
     Paused,
 }
+
+#[derive(Default, Component, Reflect)]
+#[require(DespawnOnExit::<AppState> = DespawnOnExit(AppState::InGame))]
+#[reflect(Component)]
+pub struct InGameOnly;

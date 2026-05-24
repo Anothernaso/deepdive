@@ -19,6 +19,7 @@ use bevy::prelude::*;
 use super::{super::pawn::Pawn, Controller};
 
 use deepdive_physics::BodyUpdate;
+use deepdive_state::IsPaused;
 
 const SPEED: f32 = 3.3;
 
@@ -35,8 +36,13 @@ pub fn update_player(
     pawns: Query<Entity, With<Pawn>>,
     mut writer: MessageWriter<BodyUpdate>,
     input: Res<ButtonInput<KeyCode>>,
+    state: Res<State<IsPaused>>,
     time: Res<Time>,
 ) {
+    if *state.get() != IsPaused::Running {
+        return;
+    }
+
     let mut dir = Vec2::ZERO;
     if input.pressed(KeyCode::KeyW) {
         dir.y += 1.;

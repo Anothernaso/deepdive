@@ -14,15 +14,19 @@
 // Project Deep Dive. If not, see <https://www.gnu.org/licenses/>.
 //
 
-mod human;
-
-pub use human::{HumanPawn, human};
-
 use bevy::prelude::*;
 
-use deepdive_state::InGameOnly;
+use super::state::IsPaused;
 
-#[derive(Default, Component, Reflect)]
-#[require(InGameOnly)]
-#[reflect(Component)]
-pub struct Pawn;
+pub fn update_toggle(
+    state: Res<State<IsPaused>>,
+    mut next: ResMut<NextState<IsPaused>>,
+    input: Res<ButtonInput<KeyCode>>,
+) {
+    if input.just_pressed(KeyCode::Escape) {
+        match *state.get() {
+            IsPaused::Running => next.set(IsPaused::Paused),
+            IsPaused::Paused => next.set(IsPaused::Running),
+        };
+    }
+}

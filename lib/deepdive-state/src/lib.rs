@@ -15,10 +15,13 @@
 //
 
 mod state;
+mod toggle;
 
-pub use state::{AppState, IsPaused};
+pub use state::{AppState, InGameOnly, IsPaused};
 
 use bevy::prelude::*;
+
+use toggle::update_toggle;
 
 pub struct DeepDiveStatePlugin;
 
@@ -26,8 +29,14 @@ impl Plugin for DeepDiveStatePlugin {
     fn build(&self, app: &mut App) {
         app.register_type::<AppState>();
         app.register_type::<IsPaused>();
+        app.register_type::<InGameOnly>();
 
         app.init_state::<AppState>();
         app.add_sub_state::<IsPaused>();
+
+        app.add_systems(
+            FixedUpdate,
+            update_toggle.run_if(in_state(AppState::InGame)),
+        );
     }
 }

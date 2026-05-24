@@ -17,7 +17,10 @@
 use bevy::prelude::*;
 
 use super::Pawn;
-use deepdive_physics::{PhysicsBody, SubAquaticBody};
+use deepdive_physics::{Mass, Size, SubAquaticBody};
+
+const SIZE: Vec2 = Vec2::new(50., 180.);
+const MASS: f32 = 8000.;
 
 #[derive(Component, Reflect)]
 #[require(Pawn, SubAquaticBody)]
@@ -25,12 +28,10 @@ use deepdive_physics::{PhysicsBody, SubAquaticBody};
 pub struct HumanPawn;
 
 pub fn human() -> impl Bundle {
-    let size = Vec2::new(50., 180.);
-    let weight = 8000.;
-
     (
         HumanPawn,
-        PhysicsBody::new(size.x * size.y, weight),
-        Sprite::from_color(Color::WHITE, size),
+        Size(SIZE),
+        Mass(MASS),
+        Sprite::from_color(Color::WHITE, SIZE),
     )
 }

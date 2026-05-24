@@ -17,6 +17,7 @@
 mod camera;
 mod controller;
 mod pawn;
+mod player;
 
 pub use camera::MainCamera;
 pub use controller::{Controller, PlayerController, player_controller};
@@ -26,8 +27,9 @@ use bevy::prelude::*;
 
 use camera::camera_setup;
 use controller::update_player;
+use player::player_setup;
 
-use deepdive_state::IsPaused;
+use deepdive_state::{AppState, IsPaused};
 
 pub struct DeepDiveLogicPlugin;
 
@@ -41,16 +43,11 @@ impl Plugin for DeepDiveLogicPlugin {
         app.register_type::<Pawn>();
         app.register_type::<HumanPawn>();
 
-        app.add_systems(Startup, (camera_setup, setup));
+        app.add_systems(Startup, camera_setup);
+        app.add_systems(OnEnter(AppState::InGame), player_setup);
         app.add_systems(
             FixedUpdate,
             update_player.run_if(in_state(IsPaused::Running)),
         );
     }
-}
-
-fn setup(mut commands: Commands) {
-    commands.spawn(human()).with_children(|p| {
-        p.spawn(player_controller(p.target_entity()));
-    });
 }

@@ -14,15 +14,13 @@
 // Project Deep Dive. If not, see <https://www.gnu.org/licenses/>.
 //
 
-mod human;
-
-pub use human::{HumanPawn, human};
-
 use bevy::prelude::*;
 
-use deepdive_state::InGameOnly;
+use super::controller::player_controller;
+use super::pawn::human;
 
-#[derive(Default, Component, Reflect)]
-#[require(InGameOnly)]
-#[reflect(Component)]
-pub struct Pawn;
+pub fn player_setup(mut commands: Commands) {
+    commands.spawn(human()).with_children(|p| {
+        p.spawn(player_controller(p.target_entity()));
+    });
+}

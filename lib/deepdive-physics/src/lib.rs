@@ -16,16 +16,19 @@
 
 mod body;
 mod message;
+mod misc;
 mod physics;
 mod water_setup;
 
 pub use body::{PhysicsBody, SubAquaticBody};
 pub use message::BodyUpdate;
+pub use misc::{Area, Density, Mass, Size};
 pub use water_setup::WaterSetup;
 
 use bevy::prelude::*;
 
 use message::body_update;
+use misc::{update_area, update_density};
 use physics::simulate_buoyancy;
 
 use deepdive_state::IsPaused;
@@ -50,16 +53,20 @@ impl Plugin for DeepDivePhysicsPlugin {
         app.register_type::<PhysicsBody>();
         app.register_type::<SubAquaticBody>();
 
+        app.register_type::<Size>();
+        app.register_type::<Mass>();
+        app.register_type::<Area>();
+        app.register_type::<Density>();
+
         app.insert_resource(self.water_setup.clone());
 
         app.add_message::<BodyUpdate>();
 
+        app.add_systems(FixedPreUpdate, (update_area, update_density).chain());
         app.add_systems(
             FixedUpdate,
-            (
-                simulate_buoyancy.run_if(in_state(IsPaused::Running)),
-                body_update,
-            ),
+            simulate_buoyancy.run_if(in_state(IsPaused::Running)),
         );
+        app.add_systems(FixedPostUpdate, body_update);
     }
 }
