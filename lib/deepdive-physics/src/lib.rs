@@ -27,9 +27,10 @@ pub use setup::{PhysicsSetup, WaterSetup};
 
 use bevy::prelude::*;
 
+use body::update_subaquatic_body;
 use message::body_update;
 use misc::{update_area, update_density};
-use physics::simulate_buoyancy;
+use physics::apply_buoyancy;
 
 use deepdive_state::IsPaused;
 
@@ -68,10 +69,13 @@ impl Plugin for DeepDivePhysicsPlugin {
 
         app.add_message::<BodyUpdate>();
 
-        app.add_systems(FixedPreUpdate, (update_area, update_density).chain());
+        app.add_systems(
+            FixedPreUpdate,
+            (update_area, update_density, update_subaquatic_body).chain(),
+        );
         app.add_systems(
             FixedUpdate,
-            simulate_buoyancy.run_if(in_state(IsPaused::Running)),
+            apply_buoyancy.run_if(in_state(IsPaused::Running)),
         );
         app.add_systems(FixedPostUpdate, body_update);
     }

@@ -1,0 +1,50 @@
+// Copyright (C) 2026 Anatnaso
+//
+// This file is part of Project Deep Dive.
+//
+// Project Deep Dive is free software: you can redistribute it and/or modify it under the terms of
+// the GNU General Public License as published by the Free Software Foundation, either
+// version 3 of the License, or any later version.
+//
+// Project Deep Dive is distributed in the hope that it will be useful, but WITHOUT ANY
+// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+// A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License along with
+// Project Deep Dive. If not, see <https://www.gnu.org/licenses/>.
+//
+
+use bevy::prelude::*;
+
+use super::super::{body::SubAquaticBody, message::BodyUpdate, misc::Density, setup::WaterSetup};
+
+use deepdive_state::IsPaused;
+
+pub fn apply_buoyancy(
+    subaquatic: Query<(Entity, &SubAquaticBody, &Density)>,
+    water_setup: Res<WaterSetup>,
+    mut writer: MessageWriter<BodyUpdate>,
+    is_paused: Res<State<IsPaused>>,
+    time: Res<Time>,
+) {
+    if *is_paused.get() != IsPaused::Running {
+        return;
+    }
+
+    let mut messages = Vec::<BodyUpdate>::new();
+
+    subaquatic.iter().for_each(|(entity, body, density)| {
+        if !body.is_submerged {
+            return;
+        }
+
+        let density_ratio = density.0 / water_setup.density;
+        let buoyancy_factor = 1.0 / density_ratio;
+
+        let upward_force = buoyancy_factor * 100.0 * time.delta_secs();
+
+        messages.push(BodyUpdate::new(entity, Vec2::new(0., upward_force)));
+    });
+
+    writer.write_batch(messages);
+}

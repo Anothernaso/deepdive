@@ -16,7 +16,10 @@
 
 use bevy::prelude::*;
 
-use super::misc::{Area, Density, Mass, Size};
+use super::{
+    misc::{Area, Density, Mass, Size},
+    setup::WaterSetup,
+};
 
 #[derive(Debug, Default, Component, Reflect)]
 #[require(Transform, Size, Mass, Area, Density)]
@@ -26,4 +29,20 @@ pub struct PhysicsBody;
 #[derive(Debug, Default, Component, Reflect)]
 #[require(PhysicsBody)]
 #[reflect(Component)]
-pub struct SubAquaticBody;
+pub struct SubAquaticBody {
+    pub is_submerged: bool,
+}
+
+pub fn update_subaquatic_body(
+    mut query: Query<
+        (&mut SubAquaticBody, &Transform, &Size),
+        Or<(Added<SubAquaticBody>, Changed<Transform>, Changed<Size>)>,
+    >,
+    water_setup: Res<WaterSetup>,
+) {
+    query.iter_mut().for_each(|(mut body, transform, size)| {
+        let lower_bound = transform.translation.y - size.0.y / 2.;
+
+        body.is_submerged = lower_bound < water_setup.surface_height;
+    });
+}

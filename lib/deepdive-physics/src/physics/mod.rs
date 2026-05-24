@@ -14,31 +14,6 @@
 // Project Deep Dive. If not, see <https://www.gnu.org/licenses/>.
 //
 
-use bevy::prelude::*;
+mod buoyancy;
 
-use super::{body::SubAquaticBody, message::BodyUpdate, misc::Density, setup::WaterSetup};
-
-use deepdive_state::IsPaused;
-
-pub fn simulate_buoyancy(
-    sub_aquatic: Query<(Entity, &Density), With<SubAquaticBody>>,
-    water_setup: Res<WaterSetup>,
-    mut writer: MessageWriter<BodyUpdate>,
-    is_paused: Res<State<IsPaused>>,
-    time: Res<Time>,
-) {
-    if *is_paused.get() != IsPaused::Running {
-        return;
-    }
-
-    let mut messages = Vec::<BodyUpdate>::new();
-
-    sub_aquatic.iter().for_each(|(entity, density)| {
-        let density_ratio = density.0 / water_setup.density;
-        let vel_delta = (density_ratio - 1.) * 100. * time.delta_secs();
-
-        messages.push(BodyUpdate::new(entity, Vec2::new(0., vel_delta)));
-    });
-
-    writer.write_batch(messages);
-}
+pub use buoyancy::apply_buoyancy;
