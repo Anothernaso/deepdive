@@ -17,10 +17,10 @@
 use bevy::prelude::*;
 
 use super::Pawn;
-use deepdive_physics::{DefaultSimulatedBody, PhysicsBody, SubAquaticBody};
+use deepdive_physics::{PhysicsBody, SubAquaticBody};
 
 #[derive(Component, Reflect)]
-#[require(Pawn, SubAquaticBody, DefaultSimulatedBody)]
+#[require(Pawn, SubAquaticBody)]
 #[reflect(Component)]
 pub struct HumanPawn;
 

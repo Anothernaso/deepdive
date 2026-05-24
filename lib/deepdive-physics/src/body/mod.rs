@@ -23,12 +23,16 @@ pub struct PhysicsBody {
     area_cm2: f32,
     mass_dag: f32,
 
-    density_dagpcm2: f32
+    density_dagpcm2: f32,
 }
 
 impl PhysicsBody {
     pub fn new(area_cm2: f32, mass_dag: f32) -> Self {
-        Self { area_cm2, mass_dag, density_dagpcm2: mass_dag / area_cm2 }
+        Self {
+            area_cm2,
+            mass_dag,
+            density_dagpcm2: mass_dag / area_cm2,
+        }
     }
 
     pub fn get_area_cm2(&self) -> f32 {
@@ -62,8 +66,3 @@ impl Default for PhysicsBody {
 #[require(PhysicsBody)]
 #[reflect(Component)]
 pub struct SubAquaticBody;
-
-#[derive(Default, Component, Reflect)]
-#[require(PhysicsBody)]
-#[reflect(Component)]
-pub struct DefaultSimulatedBody;

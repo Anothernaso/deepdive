@@ -16,7 +16,11 @@
 
 use bevy::prelude::*;
 
-use super::Controller;
+use super::{super::pawn::Pawn, Controller};
+
+use deepdive_physics::BodyUpdate;
+
+const SPEED: f32 = 3.3;
 
 #[derive(Component, Reflect)]
 #[reflect(Component)]
@@ -24,4 +28,41 @@ pub struct PlayerController;
 
 pub fn player_controller(pawn: Entity) -> impl Bundle {
     (Controller::new(pawn), PlayerController)
+}
+
+pub fn update_player(
+    players: Query<&Controller, With<PlayerController>>,
+    pawns: Query<Entity, With<Pawn>>,
+    mut writer: MessageWriter<BodyUpdate>,
+    input: Res<ButtonInput<KeyCode>>,
+    time: Res<Time>,
+) {
+    let mut dir = Vec2::ZERO;
+    if input.pressed(KeyCode::KeyW) {
+        dir.y += 1.;
+    }
+    if input.pressed(KeyCode::KeyA) {
+        dir.x -= 1.;
+    }
+    if input.pressed(KeyCode::KeyS) {
+        dir.y -= 1.;
+    }
+    if input.pressed(KeyCode::KeyD) {
+        dir.x += 1.;
+    }
+
+    let dir = dir.normalize_or_zero();
+    let vel = dir * 100. * SPEED * time.delta_secs();
+
+    let mut messages = Vec::<BodyUpdate>::new();
+
+    players.iter().for_each(|controller| {
+        let Ok(pawn) = pawns.get(controller.pawn) else {
+            return;
+        };
+
+        messages.push(BodyUpdate::new(pawn, vel));
+    });
+
+    writer.write_batch(messages);
 }

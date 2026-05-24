@@ -4,8 +4,6 @@ use bevy::prelude::*;
 
 use super::body::PhysicsBody;
 
-use deepdive_state::IsPaused;
-
 #[derive(Message, Reflect)]
 pub struct BodyUpdate {
     body: Entity,
@@ -21,12 +19,7 @@ impl BodyUpdate {
 pub fn body_update(
     bodies: Query<&mut Transform, With<PhysicsBody>>,
     mut messages: MessageReader<BodyUpdate>,
-    is_paused: Res<State<IsPaused>>,
 ) {
-    if *is_paused.get() != IsPaused::Running {
-        return;
-    }
-
     let bodies = Arc::new(RwLock::new(bodies));
 
     messages.par_read().for_each(|message| {
@@ -38,6 +31,7 @@ pub fn body_update(
             return;
         };
 
-        body.translation += message.delta.extend(0.);
+        body.translation.x += message.delta.x;
+        body.translation.y += message.delta.y;
     });
 }

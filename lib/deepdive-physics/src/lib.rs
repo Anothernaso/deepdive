@@ -19,7 +19,7 @@ mod message;
 mod physics;
 mod water_setup;
 
-pub use body::{DefaultSimulatedBody, PhysicsBody, SubAquaticBody};
+pub use body::{PhysicsBody, SubAquaticBody};
 pub use message::BodyUpdate;
 pub use water_setup::WaterSetup;
 
@@ -27,6 +27,8 @@ use bevy::prelude::*;
 
 use message::body_update;
 use physics::simulate_buoyancy;
+
+use deepdive_state::IsPaused;
 
 #[derive(Default)]
 pub struct DeepDivePhysicsPlugin {
@@ -46,13 +48,18 @@ impl Plugin for DeepDivePhysicsPlugin {
         app.register_type::<BodyUpdate>();
 
         app.register_type::<PhysicsBody>();
-        app.register_type::<DefaultSimulatedBody>();
         app.register_type::<SubAquaticBody>();
 
         app.insert_resource(self.water_setup.clone());
 
         app.add_message::<BodyUpdate>();
 
-        app.add_systems(FixedUpdate, (simulate_buoyancy, body_update));
+        app.add_systems(
+            FixedUpdate,
+            (
+                simulate_buoyancy.run_if(in_state(IsPaused::Running)),
+                body_update,
+            ),
+        );
     }
 }

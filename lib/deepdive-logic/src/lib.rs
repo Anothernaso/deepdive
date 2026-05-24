@@ -25,6 +25,9 @@ pub use pawn::{HumanPawn, Pawn, human};
 use bevy::prelude::*;
 
 use camera::camera_setup;
+use controller::update_player;
+
+use deepdive_state::IsPaused;
 
 pub struct DeepDiveLogicPlugin;
 
@@ -39,6 +42,10 @@ impl Plugin for DeepDiveLogicPlugin {
         app.register_type::<HumanPawn>();
 
         app.add_systems(Startup, (camera_setup, setup));
+        app.add_systems(
+            FixedUpdate,
+            update_player.run_if(in_state(IsPaused::Running)),
+        );
     }
 }
 

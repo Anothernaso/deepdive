@@ -16,7 +16,7 @@
 
 mod player;
 
-pub use player::{PlayerController, player_controller};
+pub use player::{PlayerController, player_controller, update_player};
 
 use bevy::prelude::*;
 
