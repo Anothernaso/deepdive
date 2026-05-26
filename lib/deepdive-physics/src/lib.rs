@@ -20,14 +20,14 @@ mod misc;
 mod physics;
 mod setup;
 
-pub use body::{PhysicsBody, SubAquaticBody};
+pub use body::{Buoyant, Gravitational, PhysicsBody, Submerged};
 pub use message::BodyUpdate;
 pub use misc::{Area, Density, Mass, Size};
 pub use setup::{PhysicsSetup, WaterSetup};
 
 use bevy::prelude::*;
 
-use body::update_subaquatic_body;
+use body::update_submerged;
 use message::body_update;
 use misc::{update_area, update_density};
 use physics::{apply_buoyancy, apply_gravity};
@@ -57,7 +57,9 @@ impl Plugin for DeepDivePhysicsPlugin {
         app.register_type::<BodyUpdate>();
 
         app.register_type::<PhysicsBody>();
-        app.register_type::<SubAquaticBody>();
+        app.register_type::<Submerged>();
+        app.register_type::<Buoyant>();
+        app.register_type::<Gravitational>();
 
         app.register_type::<Size>();
         app.register_type::<Mass>();
@@ -71,7 +73,7 @@ impl Plugin for DeepDivePhysicsPlugin {
 
         app.add_systems(
             FixedPreUpdate,
-            (update_area, update_density, update_subaquatic_body).chain(),
+            (update_area, update_density, update_submerged).chain(),
         );
         app.add_systems(
             FixedUpdate,

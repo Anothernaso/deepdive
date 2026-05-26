@@ -17,13 +17,13 @@
 use bevy::prelude::*;
 
 use super::Pawn;
-use deepdive_physics::{Mass, Size, SubAquaticBody};
+use deepdive_physics::{Buoyant, Gravitational, Mass, Size};
 
 const SIZE: Vec2 = Vec2::new(50., 180.);
 const MASS: f32 = 8000.;
 
 #[derive(Debug, Component, Reflect)]
-#[require(Pawn, SubAquaticBody)]
+#[require(Pawn, Buoyant, Gravitational)]
 #[reflect(Component)]
 pub struct HumanPawn;
 

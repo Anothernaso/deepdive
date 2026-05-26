@@ -20,9 +20,10 @@ pub use human::{HumanPawn, human};
 
 use bevy::prelude::*;
 
+use deepdive_physics::{Area, Density, Mass, PhysicsBody, Size, Submerged};
 use deepdive_state::InGameOnly;
 
 #[derive(Debug, Default, Component, Reflect)]
-#[require(InGameOnly)]
+#[require(InGameOnly, Size, Mass, Area, Density, Submerged, PhysicsBody)]
 #[reflect(Component)]
 pub struct Pawn;

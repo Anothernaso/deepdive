@@ -16,10 +16,14 @@
 
 use bevy::prelude::*;
 
-use crate::{body::PhysicsBody, message::BodyUpdate, setup::PhysicsSetup};
+use crate::{
+    body::{Gravitational, PhysicsBody},
+    message::BodyUpdate,
+    setup::PhysicsSetup,
+};
 
 pub fn apply_gravity(
-    query: Query<Entity, With<PhysicsBody>>,
+    query: Query<Entity, (With<Gravitational>, With<PhysicsBody>)>,
     gravity: Res<PhysicsSetup>,
     mut writer: MessageWriter<BodyUpdate>,
     time: Res<Time>,

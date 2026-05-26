@@ -16,12 +16,17 @@
 
 use bevy::prelude::*;
 
-use super::super::{body::SubAquaticBody, message::BodyUpdate, misc::Density, setup::WaterSetup};
+use crate::{
+    body::{Buoyant, PhysicsBody, Submerged},
+    message::BodyUpdate,
+    misc::Density,
+    setup::WaterSetup,
+};
 
 use deepdive_state::IsPaused;
 
 pub fn apply_buoyancy(
-    subaquatic: Query<(Entity, &SubAquaticBody, &Density)>,
+    subaquatic: Query<(Entity, &Submerged, &Density), (With<Buoyant>, With<PhysicsBody>)>,
     water_setup: Res<WaterSetup>,
     mut writer: MessageWriter<BodyUpdate>,
     is_paused: Res<State<IsPaused>>,
@@ -33,8 +38,8 @@ pub fn apply_buoyancy(
 
     let mut messages = Vec::<BodyUpdate>::new();
 
-    subaquatic.iter().for_each(|(entity, body, density)| {
-        if !body.is_submerged {
+    subaquatic.iter().for_each(|(entity, submerged, density)| {
+        if !submerged.0 {
             return;
         }
 
